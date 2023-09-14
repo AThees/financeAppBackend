@@ -15,10 +15,10 @@ import lombok.*;
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int id;
+    Integer id;
 
     String name;
-    int amountInCents;
+    Integer amountInCents;
     String financeInstitution;
     String type;
     Boolean addToSum;

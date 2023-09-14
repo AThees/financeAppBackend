@@ -1,8 +1,8 @@
 CREATE TABLE wallets(
-    id INTEGER NOT NULL PRIMARY KEY,
-    name VARCHAR NOT NULL UNIQUE,
-    amountInCents INTEGER NOT NULL,
-    financeInstitution VARCHAR,
-    type VARCHAR NOT NULL,
-    addToSum BOOLEAN NOT NULL
+    id TEXT NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    amount_in_cents INTEGER NOT NULL,
+    finance_institution TEXT,
+    type TEXT NOT NULL,
+    add_to_sum BOOLEAN NOT NULL
 );

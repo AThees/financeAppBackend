@@ -2,7 +2,7 @@ package com.example.financeappbackend.controllers;
 
 import com.example.financeappbackend.domain.wallet.Wallet;
 import com.example.financeappbackend.domain.wallet.WalletRepository;
-import com.example.financeappbackend.dtos.WalletDTO;
+import com.example.financeappbackend.domain.wallet.WalletDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

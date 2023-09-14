@@ -1,6 +1,5 @@
 package com.example.financeappbackend.domain.wallet;
 
-import com.example.financeappbackend.dtos.WalletDTO;
 import jakarta.persistence.*;
 import lombok.*;
 

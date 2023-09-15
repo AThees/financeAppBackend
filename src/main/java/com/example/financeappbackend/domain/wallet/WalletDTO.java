@@ -9,5 +9,5 @@ public record WalletDTO(String name,
                         String financeInstitution,
                         String type,
                         Boolean addToSum,
-                        List<Expense> expenses) {
-}
+                        List<Expense> expenses,
+                        String id) {}

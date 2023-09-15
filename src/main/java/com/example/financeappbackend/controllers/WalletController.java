@@ -31,4 +31,14 @@ public class WalletController {
         return ResponseEntity.ok(allWallets);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getWalletById(@PathVariable("id") String id){
+        WalletDTO wallet = service.getWalletById(id);
+        if(wallet == null){
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok(wallet);
+        }
+    }
+
 }

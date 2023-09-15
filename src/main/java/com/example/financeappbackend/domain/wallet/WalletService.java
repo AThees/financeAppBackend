@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WalletService {
@@ -26,7 +27,8 @@ public class WalletService {
                 newWallet.getFinance_institution(),
                 newWallet.getType(),
                 newWallet.getAdd_to_sum(),
-                Collections.emptyList()
+                Collections.emptyList(),
+                newWallet.getId()
         );
         return answer;
     }
@@ -43,7 +45,8 @@ public class WalletService {
                     wallet.getFinance_institution(),
                     wallet.getType(),
                     wallet.getAdd_to_sum(),
-                    Collections.emptyList()
+                    Collections.emptyList(),
+                    wallet.getId()
             );
 
             answer.add(dto);
@@ -52,4 +55,28 @@ public class WalletService {
          return answer;
     }
 
+    public WalletDTO getWalletById(String id) {
+
+        Optional<Wallet> wallet = repository.findById(id);
+
+        if (wallet.isEmpty()) {
+            return null;
+        }
+
+        Wallet walletObj = wallet.get();
+
+        WalletDTO answer;
+
+        answer = new WalletDTO(walletObj.getName(),
+                walletObj.getAmount_in_cents(),
+                walletObj.getFinance_institution(),
+                walletObj.getType(),
+                walletObj.getAdd_to_sum(),
+                Collections.emptyList(),
+                walletObj.getId()
+        );
+
+        return answer;
+
+    }
 }

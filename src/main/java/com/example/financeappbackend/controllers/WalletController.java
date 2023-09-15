@@ -1,10 +1,11 @@
 package com.example.financeappbackend.controllers;
 
-import com.example.financeappbackend.domain.wallet.Wallet;
-import com.example.financeappbackend.domain.wallet.WalletRepository;
 import com.example.financeappbackend.domain.wallet.WalletDTO;
+import com.example.financeappbackend.domain.wallet.WalletService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -12,24 +13,22 @@ import org.springframework.web.bind.annotation.*;
 public class WalletController {
 
     final
-    WalletRepository repository;
+    WalletService service;
 
-    public WalletController(WalletRepository repository) {
-        this.repository = repository;
+    public WalletController(WalletService service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity addWallet(@RequestBody WalletDTO wallet){
-        Wallet newWallet = new Wallet(wallet);
-        System.out.println(newWallet.toString());
-        repository.save(newWallet);
-        return getAllWallets();
+    public ResponseEntity<WalletDTO> addWallet(@RequestBody WalletDTO wallet){
+        WalletDTO newWallet = service.createNewWallet(wallet);
+        return ResponseEntity.ok(newWallet);
     }
 
     @GetMapping
-    public ResponseEntity getAllWallets(){
-        var allProducts = repository.findAll();
-        return ResponseEntity.ok(allProducts);
+    public ResponseEntity<List<WalletDTO>> getAllWallets(){
+        var allWallets = service.getAllWallets();
+        return ResponseEntity.ok(allWallets);
     }
 
 }

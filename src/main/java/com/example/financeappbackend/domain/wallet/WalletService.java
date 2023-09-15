@@ -79,4 +79,14 @@ public class WalletService {
         return answer;
 
     }
+
+    public Boolean deleteWallet(String id) {
+        Optional<Wallet> wallet = repository.findById(id);
+        if(wallet.isEmpty()){
+            return false;
+        }
+
+        repository.delete(wallet.get());
+        return true;
+    }
 }

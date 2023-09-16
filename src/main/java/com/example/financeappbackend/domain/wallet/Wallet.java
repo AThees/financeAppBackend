@@ -16,7 +16,7 @@ public class Wallet {
     private String id;
 
     private String name;
-    private Integer amount_in_cents;
+    private Long amount_in_cents;
     private String finance_institution;
     private String type;
     private Boolean add_to_sum;

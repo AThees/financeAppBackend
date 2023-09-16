@@ -5,7 +5,7 @@ import com.example.financeappbackend.domain.expense.Expense;
 import java.util.List;
 
 public record WalletDTO(String name,
-                        Integer amountInCents,
+                        Long amountInCents,
                         String financeInstitution,
                         String type,
                         Boolean addToSum,

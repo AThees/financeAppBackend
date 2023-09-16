@@ -52,7 +52,7 @@ public class WalletController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteWallet(@PathVariable("id") String id){
+    public ResponseEntity<ResponseEntity> deleteWallet(@PathVariable("id") String id){
         Boolean deleted = service.deleteWallet(id);
         if(!deleted){
             return ResponseEntity.notFound().build();

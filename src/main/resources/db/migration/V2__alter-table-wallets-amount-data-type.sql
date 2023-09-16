@@ -1,0 +1,2 @@
+ALTER TABLE wallets
+ALTER COLUMN amount_in_cents TYPE NUMERIC;

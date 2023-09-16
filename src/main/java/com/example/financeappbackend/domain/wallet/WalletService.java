@@ -17,22 +17,6 @@ public class WalletService {
         this.repository = repository;
     }
 
-    public WalletDTO createNewWallet(WalletDTO wallet){
-        Wallet newWallet = new Wallet(wallet);
-        repository.save(newWallet);
-
-        WalletDTO answer;
-        answer = new WalletDTO(newWallet.getName(),
-                newWallet.getAmount_in_cents(),
-                newWallet.getFinance_institution(),
-                newWallet.getType(),
-                newWallet.getAdd_to_sum(),
-                Collections.emptyList(),
-                newWallet.getId()
-        );
-        return answer;
-    }
-
     public List<WalletDTO> getAllWallets(){
         var allWallets = repository.findAll();
 
@@ -80,6 +64,58 @@ public class WalletService {
 
     }
 
+    public WalletDTO createNewWallet(WalletDTO wallet){
+        Wallet newWallet = new Wallet(wallet);
+        repository.save(newWallet);
+
+        WalletDTO answer;
+        answer = new WalletDTO(newWallet.getName(),
+                newWallet.getAmount_in_cents(),
+                newWallet.getFinance_institution(),
+                newWallet.getType(),
+                newWallet.getAdd_to_sum(),
+                Collections.emptyList(),
+                newWallet.getId()
+        );
+        return answer;
+    }
+    public WalletDTO updateWallet(WalletDTO changes, String id) {
+        Optional<Wallet> walletToUpdate = repository.findById(id);
+        if(walletToUpdate.isEmpty()){
+            return null;
+        }
+
+        Wallet walletObj = walletToUpdate.get();
+
+        if(changes.name() != null){
+            walletObj.setName(changes.name());
+        }
+        if (changes.amountInCents() != null){
+            walletObj.setAmount_in_cents(changes.amountInCents());
+        }
+        if(changes.type() != null){
+            walletObj.setType(changes.type());
+        }
+        if(changes.addToSum() != null){
+            walletObj.setAdd_to_sum(changes.addToSum());
+        }
+        if (changes.financeInstitution() != null){
+            walletObj.setFinance_institution(changes.financeInstitution());
+        }
+
+        repository.save(walletObj);
+
+         return new WalletDTO(
+                walletObj.getName(),
+                walletObj.getAmount_in_cents(),
+                walletObj.getFinance_institution(),
+                walletObj.getType(),
+                walletObj.getAdd_to_sum(),
+                Collections.emptyList(),
+                walletObj.getId()
+        );
+    }
+
     public Boolean deleteWallet(String id) {
         Optional<Wallet> wallet = repository.findById(id);
         if(wallet.isEmpty()){
@@ -89,4 +125,5 @@ public class WalletService {
         repository.delete(wallet.get());
         return true;
     }
+
 }

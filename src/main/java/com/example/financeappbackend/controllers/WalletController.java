@@ -18,13 +18,6 @@ public class WalletController {
     public WalletController(WalletService service) {
         this.service = service;
     }
-
-    @PostMapping
-    public ResponseEntity<WalletDTO> addWallet(@RequestBody WalletDTO wallet){
-        WalletDTO newWallet = service.createNewWallet(wallet);
-        return ResponseEntity.ok(newWallet);
-    }
-
     @GetMapping
     public ResponseEntity<List<WalletDTO>> getAllWallets(){
         var allWallets = service.getAllWallets();
@@ -39,6 +32,23 @@ public class WalletController {
         }else {
             return ResponseEntity.ok(wallet);
         }
+    }
+
+    @PostMapping
+    public ResponseEntity<WalletDTO> addWallet(@RequestBody WalletDTO wallet){
+        WalletDTO newWallet = service.createNewWallet(wallet);
+        return ResponseEntity.ok(newWallet);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<WalletDTO> updateWallet(@RequestBody WalletDTO changes, @PathVariable("id") String id){
+        WalletDTO updatedWallet = service.updateWallet(changes, id);
+
+        if (updatedWallet == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(updatedWallet);
     }
 
     @DeleteMapping("/{id}")

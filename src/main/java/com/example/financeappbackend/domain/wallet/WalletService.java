@@ -1,5 +1,9 @@
 package com.example.financeappbackend.domain.wallet;
 
+import com.example.financeappbackend.domain.expense.Expense;
+import com.example.financeappbackend.domain.expense.ExpenseDTO;
+import com.example.financeappbackend.domain.expense.ExpenseRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,25 +15,48 @@ import java.util.Optional;
 public class WalletService {
 
     final
-    WalletRepository repository;
+    WalletRepository walletRepository;
 
-    public WalletService(WalletRepository repository) {
-        this.repository = repository;
+    final
+    ExpenseRepository expenseRepository;
+
+    public WalletService(WalletRepository walletRepository, ExpenseRepository expenseRepository) {
+        this.walletRepository = walletRepository;
+        this.expenseRepository = expenseRepository;
     }
 
     public List<WalletDTO> getAllWallets(){
-        var allWallets = repository.findAll();
+        var allWallets = walletRepository.findAll();
 
         List<WalletDTO> answer = new ArrayList<>();
 
         for (Wallet wallet: allWallets) {
+
+            List<Expense> expenses = expenseRepository.findByWalletId(wallet);
+
+            List<ExpenseDTO> expenseDTOS = new ArrayList<>();
+
+            for(Expense expense : expenses){
+                ExpenseDTO dto = new ExpenseDTO(
+                        expense.getDescription(),
+                        expense.getValue_in_cents(),
+                        expense.getPaid(),
+                        expense.getCategory(),
+                        expense.getWalletId().getId(),
+                        expense.getId()
+                );
+
+                expenseDTOS.add(dto);
+            }
+
+
             WalletDTO dto = new WalletDTO(
                     wallet.getName(),
                     wallet.getAmount_in_cents(),
                     wallet.getFinance_institution(),
                     wallet.getType(),
                     wallet.getAdd_to_sum(),
-                    Collections.emptyList(),
+                    expenseDTOS,
                     wallet.getId()
             );
 
@@ -41,7 +68,7 @@ public class WalletService {
 
     public WalletDTO getWalletById(String id) {
 
-        Optional<Wallet> wallet = repository.findById(id);
+        Optional<Wallet> wallet = walletRepository.findById(id);
 
         if (wallet.isEmpty()) {
             return null;
@@ -51,12 +78,29 @@ public class WalletService {
 
         WalletDTO answer;
 
+        List<Expense> expenses = expenseRepository.findByWalletId(walletObj);
+
+        List<ExpenseDTO> expenseDTOS = new ArrayList<>();
+
+        for(Expense expense : expenses){
+            ExpenseDTO dto = new ExpenseDTO(
+                    expense.getDescription(),
+                    expense.getValue_in_cents(),
+                    expense.getPaid(),
+                    expense.getCategory(),
+                    expense.getWalletId().getId(),
+                    expense.getId()
+            );
+
+            expenseDTOS.add(dto);
+        }
+
         answer = new WalletDTO(walletObj.getName(),
                 walletObj.getAmount_in_cents(),
                 walletObj.getFinance_institution(),
                 walletObj.getType(),
                 walletObj.getAdd_to_sum(),
-                Collections.emptyList(),
+                expenseDTOS,
                 walletObj.getId()
         );
 
@@ -66,7 +110,7 @@ public class WalletService {
 
     public WalletDTO createNewWallet(WalletDTO wallet){
         Wallet newWallet = new Wallet(wallet);
-        repository.save(newWallet);
+        walletRepository.save(newWallet);
 
         WalletDTO answer;
         answer = new WalletDTO(newWallet.getName(),
@@ -80,7 +124,7 @@ public class WalletService {
         return answer;
     }
     public WalletDTO updateWallet(WalletDTO changes, String id) {
-        Optional<Wallet> walletToUpdate = repository.findById(id);
+        Optional<Wallet> walletToUpdate = walletRepository.findById(id);
         if(walletToUpdate.isEmpty()){
             return null;
         }
@@ -103,7 +147,24 @@ public class WalletService {
             walletObj.setFinance_institution(changes.financeInstitution());
         }
 
-        repository.save(walletObj);
+        walletRepository.save(walletObj);
+
+        List<Expense> expenses = expenseRepository.findByWalletId(walletObj);
+
+        List<ExpenseDTO> expenseDTOS = new ArrayList<>();
+
+        for(Expense expense : expenses){
+            ExpenseDTO dto = new ExpenseDTO(
+                    expense.getDescription(),
+                    expense.getValue_in_cents(),
+                    expense.getPaid(),
+                    expense.getCategory(),
+                    expense.getWalletId().getId(),
+                    expense.getId()
+            );
+
+            expenseDTOS.add(dto);
+        }
 
          return new WalletDTO(
                 walletObj.getName(),
@@ -111,18 +172,18 @@ public class WalletService {
                 walletObj.getFinance_institution(),
                 walletObj.getType(),
                 walletObj.getAdd_to_sum(),
-                Collections.emptyList(),
+                 expenseDTOS,
                 walletObj.getId()
         );
     }
 
     public Boolean deleteWallet(String id) {
-        Optional<Wallet> wallet = repository.findById(id);
+        Optional<Wallet> wallet = walletRepository.findById(id);
         if(wallet.isEmpty()){
             return false;
         }
 
-        repository.delete(wallet.get());
+        walletRepository.delete(wallet.get());
         return true;
     }
 

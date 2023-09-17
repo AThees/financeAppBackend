@@ -3,7 +3,7 @@ package com.example.financeappbackend.domain.wallet;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Entity(name="wallets")
+@Entity
 @Table(name="wallets")
 @ToString
 @Getter

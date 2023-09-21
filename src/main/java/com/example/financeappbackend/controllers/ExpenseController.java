@@ -52,4 +52,14 @@ public class ExpenseController {
         return ResponseEntity.ok(answer);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseEntity> deleteExpense(@PathVariable("id") String id){
+        Boolean deleted = expenseService.deleteExpense(id);
+        if(!deleted){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

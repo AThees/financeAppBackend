@@ -139,4 +139,14 @@ public class ExpenseService {
                 expense.getId()
         );
     }
+
+    public Boolean deleteExpense(String id) {
+        Optional<Expense> expense = expenseRepository.findById(id);
+        if(expense.isEmpty()){
+            return false;
+        }
+
+        expenseRepository.delete(expense.get());
+        return true;
+    }
 }

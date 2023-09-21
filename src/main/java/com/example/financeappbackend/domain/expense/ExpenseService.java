@@ -80,7 +80,11 @@ public class ExpenseService {
 
     }
 
-            answer.add(dto);
+    public List<ExpenseDTO> getExpenseFromWallet(String id) {
+        var answer = findByWalletId(id);
+
+        if (answer == null){
+            return null;
         }
 
             return answer;

@@ -24,9 +24,32 @@ public class ExpenseController {
         return ResponseEntity.ok(newExpense);
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<ExpenseDTO>> getAllExpenses(){
         List<ExpenseDTO> answer = expenseService.getAllExpenses();
         return ResponseEntity.ok(answer);
     }
+
+    @GetMapping("/byWallet/{id}")
+    public ResponseEntity<List<ExpenseDTO>> getExpensesFromWallet(@PathVariable("id") String id){
+        List<ExpenseDTO> answer = expenseService.getExpenseFromWallet(id);
+
+        if(answer == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(answer);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<ExpenseDTO> updateExpense(@PathVariable("id") String id, @RequestBody ExpenseDTO changes){
+        ExpenseDTO answer = expenseService.updateExpense(id, changes);
+
+        if(answer == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(answer);
+    }
+
 }

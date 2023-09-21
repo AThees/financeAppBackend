@@ -2,7 +2,6 @@ package com.example.financeappbackend.domain.expense;
 
 import com.example.financeappbackend.domain.wallet.Wallet;
 import com.example.financeappbackend.domain.wallet.WalletRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -87,6 +86,57 @@ public class ExpenseService {
             return null;
         }
 
-            return answer;
+        List<Expense> expenses = findByWalletId(id);
+
+        return createDtoArray(expenses);
+
+    }
+
+    public ExpenseDTO updateExpense(String id, ExpenseDTO changes) {
+
+        Optional<Expense> expenseToUpdate = expenseRepository.findById(id);
+
+        if(expenseToUpdate.isEmpty()){
+            return null;
+        }
+
+        Expense expense = expenseToUpdate.get();
+
+        if(changes.description() != null) {
+            expense.setDescription(changes.description());
+        }
+
+        if(changes.valueInCents() != null){
+            expense.setValue_in_cents(changes.valueInCents());
+        }
+
+        if(changes.paid() != null){
+            expense.setPaid(changes.paid());
+        }
+
+        if (changes.category() != null) {
+            expense.setCategory(changes.category());
+        }
+
+        if(changes.walletId() != null){
+            Optional<Wallet> wallet = walletRepository.findById(changes.walletId());
+
+            if(wallet.isEmpty()){
+                throw new RuntimeException("Carteira não encontrada!");
+            }
+
+            expense.setWalletId(wallet.get());
+        }
+
+        expenseRepository.save(expense);
+
+        return new ExpenseDTO(
+                expense.getDescription(),
+                expense.getValue_in_cents(),
+                expense.getPaid(),
+                expense.getCategory(),
+                expense.getWalletId().getId(),
+                expense.getId()
+        );
     }
 }

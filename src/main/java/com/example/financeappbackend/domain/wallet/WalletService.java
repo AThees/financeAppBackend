@@ -3,7 +3,7 @@ package com.example.financeappbackend.domain.wallet;
 import com.example.financeappbackend.domain.expense.Expense;
 import com.example.financeappbackend.domain.expense.ExpenseDTO;
 import com.example.financeappbackend.domain.expense.ExpenseRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.financeappbackend.domain.expense.ExpenseService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,9 +20,13 @@ public class WalletService {
     final
     ExpenseRepository expenseRepository;
 
-    public WalletService(WalletRepository walletRepository, ExpenseRepository expenseRepository) {
+    final
+    ExpenseService expenseService;
+
+    public WalletService(WalletRepository walletRepository, ExpenseRepository expenseRepository, ExpenseService expenseService) {
         this.walletRepository = walletRepository;
         this.expenseRepository = expenseRepository;
+        this.expenseService = expenseService;
     }
 
     public List<WalletDTO> getAllWallets(){
@@ -34,21 +38,7 @@ public class WalletService {
 
             List<Expense> expenses = expenseRepository.findByWalletId(wallet);
 
-            List<ExpenseDTO> expenseDTOS = new ArrayList<>();
-
-            for(Expense expense : expenses){
-                ExpenseDTO dto = new ExpenseDTO(
-                        expense.getDescription(),
-                        expense.getValue_in_cents(),
-                        expense.getPaid(),
-                        expense.getCategory(),
-                        expense.getWalletId().getId(),
-                        expense.getId()
-                );
-
-                expenseDTOS.add(dto);
-            }
-
+            List<ExpenseDTO> expenseDTOS = expenseService.createDtoArray(expenses);
 
             WalletDTO dto = new WalletDTO(
                     wallet.getName(),
@@ -80,20 +70,7 @@ public class WalletService {
 
         List<Expense> expenses = expenseRepository.findByWalletId(walletObj);
 
-        List<ExpenseDTO> expenseDTOS = new ArrayList<>();
-
-        for(Expense expense : expenses){
-            ExpenseDTO dto = new ExpenseDTO(
-                    expense.getDescription(),
-                    expense.getValue_in_cents(),
-                    expense.getPaid(),
-                    expense.getCategory(),
-                    expense.getWalletId().getId(),
-                    expense.getId()
-            );
-
-            expenseDTOS.add(dto);
-        }
+        List<ExpenseDTO> expenseDTOS = expenseService.createDtoArray(expenses);
 
         answer = new WalletDTO(walletObj.getName(),
                 walletObj.getAmount_in_cents(),
@@ -151,20 +128,7 @@ public class WalletService {
 
         List<Expense> expenses = expenseRepository.findByWalletId(walletObj);
 
-        List<ExpenseDTO> expenseDTOS = new ArrayList<>();
-
-        for(Expense expense : expenses){
-            ExpenseDTO dto = new ExpenseDTO(
-                    expense.getDescription(),
-                    expense.getValue_in_cents(),
-                    expense.getPaid(),
-                    expense.getCategory(),
-                    expense.getWalletId().getId(),
-                    expense.getId()
-            );
-
-            expenseDTOS.add(dto);
-        }
+        List<ExpenseDTO> expenseDTOS = expenseService.createDtoArray(expenses);
 
          return new WalletDTO(
                 walletObj.getName(),

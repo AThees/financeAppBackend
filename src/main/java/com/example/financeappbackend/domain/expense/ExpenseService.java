@@ -23,6 +23,38 @@ public class ExpenseService {
         this.walletRepository = walletRepository;
     }
 
+    public List<Expense> findByWalletId(String id){
+        Optional<Wallet> wallet = walletRepository.findById(id);
+
+        if(wallet.isEmpty()){
+            return null;
+        }
+
+        Wallet walletObj = wallet.get();
+
+        return expenseRepository.findByWalletId(walletObj);
+    }
+
+    public List<ExpenseDTO> createDtoArray(List<Expense> expenses){
+
+        List<ExpenseDTO> expenseDTOS = new ArrayList<>();
+
+        for(Expense expense : expenses){
+            ExpenseDTO dto = new ExpenseDTO(
+                    expense.getDescription(),
+                    expense.getValue_in_cents(),
+                    expense.getPaid(),
+                    expense.getCategory(),
+                    expense.getWalletId().getId(),
+                    expense.getId()
+            );
+
+            expenseDTOS.add(dto);
+        }
+
+        return expenseDTOS;
+    }
+
     public ExpenseDTO createExpense(ExpenseDTO expense) {
         Optional<Wallet> wallet = walletRepository.findById(expense.walletId());
         if(wallet.isEmpty()){

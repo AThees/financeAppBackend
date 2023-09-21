@@ -76,17 +76,9 @@ public class ExpenseService {
     public List<ExpenseDTO> getAllExpenses() {
         List<Expense> expenses = expenseRepository.findAll();
 
-        List<ExpenseDTO> answer = new ArrayList<>();
+        return createDtoArray(expenses);
 
-        for(Expense expense : expenses){
-            ExpenseDTO dto = new ExpenseDTO(
-                    expense.getDescription(),
-                    expense.getValue_in_cents(),
-                    expense.getPaid(),
-                    expense.getCategory(),
-                    expense.getWalletId().getId(),
-                    expense.getId()
-            );
+    }
 
             answer.add(dto);
         }

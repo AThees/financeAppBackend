@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name="transactions")
+@Table(name="transfers")
 @ToString
 @Getter
 @Setter
@@ -26,5 +26,10 @@ public class Transfer {
     @JoinColumn(name = "receiver_wallet_id", nullable = false)
     private Wallet receiver_wallet_id;
 
-
+    public Transfer(String description, Long value_in_cents, Wallet sender_wallet_id, Wallet receiver_wallet_id){
+        this.description = description;
+        this.value_in_cents = value_in_cents;
+        this.sender_wallet_id = sender_wallet_id;
+        this.receiver_wallet_id = receiver_wallet_id;
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.financeappbackend.domain.transaction;
+package com.example.financeappbackend.domain.transfer;
 
 import com.example.financeappbackend.domain.wallet.Wallet;
 import jakarta.persistence.*;
@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
-public class Transaction {
+public class Transfer {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String id;

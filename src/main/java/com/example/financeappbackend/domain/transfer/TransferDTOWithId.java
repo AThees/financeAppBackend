@@ -1,6 +1,6 @@
 package com.example.financeappbackend.domain.transfer;
 
-public record TransferDTORequest(
+public record TransferDTOWithId(
         String senderWallet,
         String receiverWallet,
         Long valueInCents,

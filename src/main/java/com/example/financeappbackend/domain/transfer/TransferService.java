@@ -4,6 +4,8 @@ import com.example.financeappbackend.domain.wallet.Wallet;
 import com.example.financeappbackend.domain.wallet.WalletRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,7 +22,7 @@ public class TransferService {
         this.transferRepository = transferRepository;
     }
 
-    public TransferDTOResponse createTransfer(TransferDTORequest transfer){
+    public TransferDTOWithObject createTransfer(TransferDTOWithId transfer){
 
         Optional<Wallet> senderWallet = walletRepository.findById(transfer.senderWallet());
         Optional<Wallet> receiverWallet = walletRepository.findById(transfer.receiverWallet());
@@ -47,12 +49,49 @@ public class TransferService {
 
         transferRepository.save(newTransfer);
 
-        return new TransferDTOResponse(
+        return new TransferDTOWithObject(
                 newTransfer.getSender_wallet_id(),
                 newTransfer.getReceiver_wallet_id(),
                 newTransfer.value_in_cents,
                 newTransfer.getDescription(),
                 newTransfer.getId()
+        );
+    }
+
+    public List<TransferDTOWithId> getAllTransfers() {
+        List<Transfer> allTransfers = transferRepository.findAll();
+
+        List<TransferDTOWithId> dtos = new ArrayList<>();
+
+        for(Transfer transfer: allTransfers){
+            TransferDTOWithId dto = new TransferDTOWithId(
+                    transfer.getSender_wallet_id().getId(),
+                    transfer.getReceiver_wallet_id().getId(),
+                    transfer.getValue_in_cents(),
+                    transfer.getDescription(),
+                    transfer.getId()
+            );
+
+            dtos.add(dto);
+        }
+
+        return dtos;
+
+    }
+
+    public TransferDTOWithId getTransferById(String id) {
+        Optional<Transfer> transfer = transferRepository.findById(id);
+        if(transfer.isEmpty()){
+            return null;
+        }
+        Transfer transferObj = transfer.get();
+
+        return new TransferDTOWithId(
+                transfer.get().getSender_wallet_id().getId(),
+                transfer.get().getReceiver_wallet_id().getId(),
+                transferObj.getValue_in_cents(),
+                transferObj.getDescription(),
+                transferObj.getId()
         );
     }
 }
